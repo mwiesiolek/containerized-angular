@@ -1,0 +1,29 @@
+FROM node:alpine
+
+# Installs latest Chromium package.
+RUN echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories \
+    && echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories \
+    && apk add --no-cache \
+    chromium@edge \
+    harfbuzz@edge \
+    nss@edge \
+    && rm -rf /var/cache/*
+
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/lib/chromium/
+
+WORKDIR '/app'
+
+RUN npm install -g @angular/cli
+
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
+
+COPY . .
+
+CMD ["ng", "serve", "--host", "0.0.0.0"]
+
+# Below cmd won't work since it is exposed on 127.0.0.1
+# -p flag while running Docker requires process inside docker to listen on all interfaces
+#CMD ["npm", "run", "start"]
