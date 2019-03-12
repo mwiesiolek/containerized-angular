@@ -1,6 +1,6 @@
 # containerized-angular
 
-## Angular tests
+## Angular tests 
 
 In order to execute tests within container you need to modify the karma.conf.js as following:
 
